@@ -5,7 +5,7 @@
 //                    car jack.*********************************************************************
 //*******LICENCE:     Academic Free License v2.1****************************************************
 //*******CREATED:     Friday, 26 August 2022 02:21**************************************************
-//*******MODIFIED:    Sunday, 28 August 2022 08:10**************************************************
+//*******MODIFIED:    Sunday, 4 September 2022 13:23************************************************
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <Arduino.h>
@@ -19,7 +19,8 @@ void loop();
 outputPin buzzer {8}, sw1 {7}, sw2 {6}, sw3 {4}, sw4 {5};
 RH_ASK rx;
 
-uint8_t buffer [12],
+char buffer [3] = { };
+uint8_t temp [3] = { },
         buflen = sizeof(buffer);
 
 void setup()
@@ -38,9 +39,10 @@ void setup()
 
 void loop()
 {
-  rx.recv(buffer, &buflen);
+  rx.recv(temp, &buflen);
+  strcpy(buffer, (char*)temp);
 
-  while(strcmp((char*) buffer, "up"))
+  if(strcmp((char*) buffer, "up"))
   {
     sw1.write(1);
     sw2.write(0);
@@ -48,10 +50,9 @@ void loop()
     sw4.write(1);
     buzzer.toggle();
     delay(250);
-    break;
   }
 
-  while(strcmp((char*) buffer, "dn"))
+  if(strcmp((char*) buffer, "dn"))
   {
     sw1.write(0);
     sw2.write(1);
@@ -59,24 +60,21 @@ void loop()
     sw4.write(0);
     buzzer.toggle();
     delay(250);
-    break;
   }
 
-  while(strcmp((char*) buffer, "bp"))
+  if(strcmp((char*) buffer, "bp"))
   {
     buzzer.write(1);
     delay(300);
     buzzer.write(0);
     delay(200);
-    break;
   }
 
-  while(strcmp((char*) buffer, "np"))
+  if(strcmp((char*) buffer, "np"))
   {
     buzzer.write(0);
     delay(300);
     buzzer.write(1);
     delay(200);
-    break;
   }
 }
