@@ -27,7 +27,7 @@ void setup()
 {
   rx.init();
   //Beep buzzer 5 times.
-  for (int i =0; i>5; )
+  for (int i = 0; i< 5; )
   {
     buzzer.toggle();
     if (buzzer.read())
@@ -39,42 +39,43 @@ void setup()
 
 void loop()
 {
+
   rx.recv(temp, &buflen);
   strcpy(buffer, (char*)temp);
 
-  if(strcmp((char*) buffer, "up"))
+  while(!strcmp(buffer, "up"))
   {
     sw1.write(1);
     sw2.write(0);
     sw3.write(0);
     sw4.write(1);
     buzzer.toggle();
-    delay(250);
+    delay(200);
+    rx.recv(temp, &buflen);
+    strcpy(buffer, (char*)temp);
   }
 
-  if(strcmp((char*) buffer, "dn"))
+  while(!strcmp(buffer, "dn"))
   {
     sw1.write(0);
     sw2.write(1);
     sw3.write(1);
     sw4.write(0);
     buzzer.toggle();
-    delay(250);
+    delay(200);
+    rx.recv(temp, &buflen);
+    strcpy(buffer, (char*)temp);
   }
 
-  if(strcmp((char*) buffer, "bp"))
+  if(!strcmp(buffer, "bp"))
   {
-    buzzer.write(1);
-    delay(300);
     buzzer.write(0);
-    delay(200);
   }
 
-  if(strcmp((char*) buffer, "np"))
+  if(!strcmp(buffer, "np"))
   {
     buzzer.write(0);
-    delay(300);
-    buzzer.write(1);
-    delay(200);
   }
+
+  delay(100);
 }

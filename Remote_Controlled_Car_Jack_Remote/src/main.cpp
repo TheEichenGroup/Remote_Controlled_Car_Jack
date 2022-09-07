@@ -47,41 +47,39 @@ void setup()
 
 void loop()
 {
-  while((upbtn.read() == 0) && (downbtn.read() == 1))
+  if((upbtn.read() == 0) && (downbtn.read() == 1))
   {
       strcpy(msg, "up");
       tx.send((uint8_t *)msg, strlen(msg));
-      tx.waitPacketSent();
+      // tx.waitPacketSent();
       led.toggle();
-      delay(DELAY1);
-      break;
+      delay(200);
   }
 
-  while((downbtn.read() == 0) && (upbtn.read() == 1))
+  if((downbtn.read() == 0) && (upbtn.read() == 1))
   {
       strcpy(msg, "dn");
       tx.send((uint8_t *)msg, strlen(msg));
-      tx.waitPacketSent();
+      // tx.waitPacketSent();
       led.toggle();
-      delay(DELAY1);
-      break;
+      delay(200);
   }
 
-  while((upbtn.read() == 1) && (downbtn.read() == 1))
+  if((upbtn.read() == 1) && (downbtn.read() == 1))
   {
     strcpy(msg, "np");
     tx.send((uint8_t *)msg, strlen(msg));
-    tx.waitPacketSent();
+    // tx.waitPacketSent();
     led.write(ON);
-    break;
+    delay(200);
   }
 
-  while((upbtn.read() == 0) && (downbtn.read() == 0))
+  if((upbtn.read() == 0) && (downbtn.read() == 0))
   {
     strcpy(msg, "bp");
     tx.send((uint8_t *)msg, strlen(msg));
-    tx.waitPacketSent();
+    // tx.waitPacketSent();
     led.write(OFF);
-    break;
+    delay(200);
   }
 }
