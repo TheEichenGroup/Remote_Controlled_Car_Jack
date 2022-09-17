@@ -16,12 +16,12 @@
 void setup();
 void loop();
 enum btnPress { None = 0, Up = 1, Down= 2 };
-btnPress *checkPress(inputPin*, inputPin*);
+btnPress &checkPress(inputPin*, inputPin*);
 
 outputPin buzzer {8}, sw1 {7}, sw2 {6}, sw3 {4}, sw4 {5};
-inputPin upBtn {2}, dnBtn{3};
+inputPin upBtn {2} /*White Wire*/, dnBtn{3} /*Red Wire*/;
 RH_ASK rx;
-btnPress *btnState { };
+btnPress btnState { };
 
 char buffer [3] = { };
 uint8_t temp [3] = { },
@@ -54,7 +54,7 @@ void loop()
   strcpy(buffer, (char*)temp);
   btnState = checkPress(&upBtn, &dnBtn);
 
-  while(!strcmp(buffer, "up") || *btnState == Up)
+  while(!strcmp(buffer, "up") || btnState == Up)
   {
     sw1.write(0);
     sw2.write(1);
@@ -64,9 +64,10 @@ void loop()
     delay(200);
     rx.recv(temp, &buflen);
     strcpy(buffer, (char*)temp);
+    btnState = checkPress(&upBtn, &dnBtn);
   }
 
-  while(!strcmp(buffer, "dn") || *btnState == Down)
+  while(!strcmp(buffer, "dn") || btnState == Down)
   {
     sw1.write(1);
     sw2.write(0);
@@ -76,14 +77,15 @@ void loop()
     delay(200);
     rx.recv(temp, &buflen);
     strcpy(buffer, (char*)temp);
+    btnState = checkPress(&upBtn, &dnBtn);
   }
 
-  if(!strcmp(buffer, "bp"))
+  if(!strcmp(buffer, "bp") || btnState == None)
   {
     buzzer.write(0);
   }
 
-  if(!strcmp(buffer, "np"))
+  if(!strcmp(buffer, "np") || btnState == None)
   {
     buzzer.write(0);
   }
@@ -92,10 +94,12 @@ void loop()
 }
 
 
-btnPress *checkPress(inputPin *a, inputPin *b)
+btnPress &checkPress(inputPin *a, inputPin *b)
 {
   static btnPress temp = None;
   if(a->read() == 0 || b->read() == 0)
     temp = ((a->read()==0)?Up:Down);
-  return &temp;
+  else
+    temp = None;
+  return temp;
 }
