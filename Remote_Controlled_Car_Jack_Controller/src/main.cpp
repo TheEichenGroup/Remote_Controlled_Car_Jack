@@ -29,6 +29,10 @@ uint8_t temp [3] = { },
 
 void setup()
 {
+  sw1.write(1);
+  sw2.write(1);
+  sw3.write(1);
+  sw4.write(1);
   upBtn.write(1);
   dnBtn.write(1);
   rx.init();
